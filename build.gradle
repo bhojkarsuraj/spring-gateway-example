@@ -1,0 +1,78 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.6.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+}
+
+group = 'com.altimetrik.platform-core'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '8'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	all {
+		compile.exclude module: 'spring-boot-starter-logging'
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven {
+		url "${artifactory_Url}"
+		credentials {
+			username "${artifactory_user}"
+			password "${artifactory_password}"
+		}
+	}
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${spring_cloud_dependencies}"
+		mavenBom "com.altimetrik.platform-core:plf-cr-parent-pom:${pf_core_parent_pom}"
+		//mavenBom "org.admin.bom:admin-service-bom:${admin_service_version}"
+	}
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+	implementation 'mysql:mysql-connector-java'
+	implementation 'org.springframework.ldap:spring-ldap-core'
+
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	//implementation 'io.jaegertracing:jaeger-core'
+	//implementation 'io.opentracing.contrib:opentracing-spring-jaeger-web-starter'
+
+	implementation 'com.altimetrik.platform-core:platform-global-exception-handler'
+	implementation 'com.altimetrik.platform-core:platform-security'
+	//implementation 'com.altimetrik.platform-core:platform-logging'
+	//implementation 'com.altimetrik.platform-core:platform-caching'
+	implementation 'com.altimetrik.platform-core:platform-flyway'
+
+	implementation "org.keycloak:keycloak-admin-client"
+	implementation "io.springfox:springfox-swagger2"
+	implementation "io.springfox:springfox-swagger-ui"
+	implementation 'com.google.code.gson:gson'
+	implementation 'org.apache.commons:commons-collections4'
+
+	//Jgit
+	implementation 'org.eclipse.jgit:org.eclipse.jgit:5.4.2.201908231537-r'
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+/*test {
+	useJUnitPlatform()
+}*/
